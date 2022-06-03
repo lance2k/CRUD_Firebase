@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -37,16 +38,19 @@ public class ItemsActivity extends AppCompatActivity implements RecyclerAdapter.
     private DatabaseReference mDatabaseRef;
     private ValueEventListener mDBListener;
     private List<Product> mProducts;
+    FirebaseAuth mAuth;
 
     private void openDetailActivity(String[] data){
         Intent intent = new Intent(this, UpdateActivity.class);
-        intent.putExtra("NAME_KEY",data[0]);
-        intent.putExtra("NAMELOWER_KEY",data[1]);
-        intent.putExtra("IMAGE_KEY",data[2]);
-        intent.putExtra("DESCRIPTION_KEY",data[3]);
-        intent.putExtra("PRICE_KEY",data[4]);
-        intent.putExtra("QUANTITY_KEY",data[5]);
+        intent.putExtra("ITEM_KEY",data[0]);
+        intent.putExtra("NAME_KEY",data[1]);
+        intent.putExtra("NAMELOWER_KEY",data[2]);
+        intent.putExtra("IMAGE_KEY",data[3]);
+        intent.putExtra("DESCRIPTION_KEY",data[4]);
+        intent.putExtra("PRICE_KEY",data[5]);
+        intent.putExtra("QUANTITY_KEY",data[6]);
         startActivity(intent);
+        finish();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,9 +78,9 @@ public class ItemsActivity extends AppCompatActivity implements RecyclerAdapter.
 
                 mProducts.clear();
 
-                for (DataSnapshot teacherSnapshot : snapshot.getChildren()) {
-                    Product upload = teacherSnapshot.getValue(Product.class);
-                    upload.setKey(teacherSnapshot.getKey());
+                for (DataSnapshot productSnapshot : snapshot.getChildren()) {
+                    Product upload = productSnapshot.getValue(Product.class);
+                    upload.setKey(productSnapshot.getKey());
                     mProducts.add(upload);
                 }
                 mAdapter.notifyDataSetChanged();
@@ -93,15 +97,15 @@ public class ItemsActivity extends AppCompatActivity implements RecyclerAdapter.
     }
     public void onItemClick(int position) {
         Product clickedProduct=mProducts.get(position);
-        String[] productData={clickedProduct.getName(), clickedProduct.getNameLower(),
+        String[] productData={clickedProduct.getKey(), clickedProduct.getName(), clickedProduct.getNameLower(),
                 clickedProduct.getImageUrl(), clickedProduct.getDescription(), clickedProduct.getPrice(), clickedProduct.getQuantity()};
         openDetailActivity(productData);
     }
 
     @Override
-    public void onShowItemClick(int position) {
+    public void onUpdateItemClick(int position) {
         Product clickedProduct=mProducts.get(position);
-        String[] productData={clickedProduct.getName(), clickedProduct.getNameLower(),
+        String[] productData={clickedProduct.getKey(), clickedProduct.getName(), clickedProduct.getNameLower(),
                 clickedProduct.getImageUrl(), clickedProduct.getDescription(), clickedProduct.getPrice(), clickedProduct.getQuantity()};
         openDetailActivity(productData);
     }
@@ -125,7 +129,7 @@ public class ItemsActivity extends AppCompatActivity implements RecyclerAdapter.
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.search, menu);
+        getMenuInflater().inflate(R.menu.search_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.search_menu);
         SearchView searchView = (SearchView) searchItem.getActionView();
 

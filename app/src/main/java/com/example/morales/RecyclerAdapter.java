@@ -88,10 +88,10 @@ public  class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recyc
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
             menu.setHeaderTitle("Select Action");
-            MenuItem showItem = menu.add( Menu.NONE, 1, 1, "Show");
+            MenuItem updateItem = menu.add( Menu.NONE, 1, 1, "Update");
             MenuItem deleteItem = menu.add(Menu.NONE, 2, 2, "Delete");
 
-            showItem.setOnMenuItemClickListener(this);
+            updateItem.setOnMenuItemClickListener(this);
             deleteItem.setOnMenuItemClickListener(this);
         }
 
@@ -103,7 +103,7 @@ public  class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recyc
 
                     switch (item.getItemId()) {
                         case 1:
-                            mListener.onShowItemClick(position);
+                            mListener.onUpdateItemClick(position);
                             return true;
                         case 2:
                             mListener.onDeleteItemClick(position);
@@ -117,7 +117,7 @@ public  class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recyc
 
     public interface OnItemClickListener {
         void onItemClick(int position);
-        void onShowItemClick(int position);
+        void onUpdateItemClick(int position);
         void onDeleteItemClick(int position);
     }
 

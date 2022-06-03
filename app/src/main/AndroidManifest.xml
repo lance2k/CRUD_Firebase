@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CRUD_Firebase">
         <activity
+            android:name=".LoginActivity"
+            android:exported="true" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="true" />
+        <activity
             android:name=".UpdateActivity"
             android:exported="true" />
         <activity
